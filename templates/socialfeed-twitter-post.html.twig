@@ -1,0 +1,33 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display the Twitter block.
+ *
+ * Available variables:
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ * - post: The filtered data.
+ *   - full_username: The full_username of the user Tweeting.
+ *   - tweet: The actual tweet text of the Tweet.
+ *   - tweet_url: The qualified URL of the Tweet.
+ *   - twitter_date: The date tweet was published.
+ *   - username: The username of the user Tweeting.
+ *
+ * @see template_preprocess_socialfeed()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<a class="tw-username" href="{{ post.full_username }}"> <span>@</span>{{ post.username }}</a>
+
+<div class="tw-tweet">{{ post.tweet }}</div>
+
+{% if post.twitter_date %}
+  <div class="tw-date">{{ post.twitter_date }}</div>
+{% endif %}
+
+{% if post.tweet_url %}
+  {{ post.tweet_url }}
+{% endif %}
+

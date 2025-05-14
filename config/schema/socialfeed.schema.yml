@@ -1,0 +1,119 @@
+socialfeed.facebook.settings:
+  type: config_object
+  label: Facebook settings
+  mapping:
+    page_name:
+      type: string
+      label: Facebook page name
+    app_id:
+      type: string
+      label: Facebook App ID
+    secret_key:
+      type: string
+      label: Facebook Secret Key
+    user_token:
+      type: string
+      label: Facebook user token
+    page_permanent_token:
+      type: string
+      label: Facebook permanent token
+    no_feeds:
+      type: integer
+      label: Number of feeds
+    all_types:
+      type: boolean
+      label: Types of posts
+    post_type:
+      type: string
+      label: Selected type of post to show
+    display_pic:
+      type: boolean
+      label: Show post picture
+    display_video:
+      type: boolean
+      label: Show post video
+    trim_length:
+      type: integer
+      label: Trim length
+    teaser_text:
+      type: string
+      label: Teaser text
+    hashtag:
+      type: boolean
+      label: Show hashtag
+    time_stamp:
+      type: boolean
+      label: Show date/time
+    time_format:
+      type: string
+      label: Date/time format
+
+socialfeed.twitter.settings:
+  type: config_object
+  label: Twitter settings
+  mapping:
+    consumer_key:
+      type: string
+      label: Twitter consumer Key
+    consumer_secret:
+      type: string
+      label: Twitter Consumer Secret
+    access_token:
+      type: string
+      label: Twitter Access Token
+    access_token_secret:
+      type: string
+      label: Twitter Access Token Secret
+    tweets_count:
+      type: integer
+      label: Tweets count
+    hashtag:
+      type: boolean
+      label: Show hashtag
+    time_stamp:
+      type: boolean
+      label: Show date/time
+    time_format:
+      type: string
+      label: Date/time format
+    time_ago:
+      type: boolean
+      label: Show date twitter style
+    trim_length:
+      type: integer
+      label: Trim length
+    teaser_text:
+      type: string
+      label: Teaser text
+
+socialfeed.instagram.settings:
+  type: config_object
+  label: Instagram settings
+  mapping:
+    client_id:
+      type: string
+      label: Client ID
+    app_secret:
+      type: string
+      label: App secret
+    redirect_uri:
+      type: string
+      label: Redirect URI
+    access_token:
+      type: string
+      label: Access token
+    access_token_date:
+      type: string
+      label: Access token created date
+    picture_count:
+      type: integer
+      label: Picture count
+    video_thumbnail:
+      type: integer
+      label: Show video thumbnails
+    time_format:
+      type: string
+      label: Date/time format
+    post_link:
+      type: boolean
+      label: Show post url

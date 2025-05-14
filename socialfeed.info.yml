@@ -1,0 +1,5 @@
+name: 'Social Feed'
+type: module
+description: 'Provides users an option to easily fetch feeds from Facebook, Twitter, or Instagram and then display them accordingly using block.'
+core_version_requirement: ^8.8 || ^9 || ^10
+configure: socialfeed.configuration

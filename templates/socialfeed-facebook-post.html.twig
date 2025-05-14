@@ -1,0 +1,50 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display the Facebook block.
+ *
+ * Available variables:
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ * - post: The filtered data.
+ *   - created_time: The time when the post of created.
+ *   - link: The link the post.
+ *   - message: The textual data of the post.
+ *   - picture: The picture media of the post.
+ *   - video: The video media of the post.
+ *
+ * @see template_preprocess_socialfeed()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% if post.picture %}
+  <div class="fb-pic">
+    <img src="{{ post.picture }}" alt=""/>
+  </div>
+{% endif %}
+
+{% if post.video %}
+  <div class="fb-video">
+    <a href="{{ post.video }}">See Video</a>
+  </div>
+{% endif %}
+
+{% if post.message %}
+  <div class="fb-message">
+    {{ post.message }}
+  </div>
+{% endif %}
+
+{% if post.link %}
+  <div class="fb-link">
+    {{ post.link }}
+  </div>
+{% endif %}
+
+{% if should_display_time %}
+  <div class="fb-time">
+    {{ post.created_time }}
+  </div>
+{% endif %}
