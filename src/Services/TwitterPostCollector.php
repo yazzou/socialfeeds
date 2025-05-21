@@ -2,7 +2,8 @@
 
 namespace Drupal\socialfeed\Services;
 
-use Abraham\TwitterOAuth\TwitterOAuth;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * The collector class for Twitter.
@@ -12,75 +13,40 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 class TwitterPostCollector {
 
   /**
-   * Twitter's consumer key.
+   * The HTTP client.
+   *
+   * @var \GuzzleHttp\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * The bearer token.
    *
    * @var string
    */
-  protected $consumerKey;
+  protected $bearerToken;
 
   /**
-   * Twitter's consumer secret.
+   * The Twitter user ID.
    *
    * @var string
    */
-  protected $consumerSecret;
-
-  /**
-   * Twitter's access token.
-   *
-   * @var string
-   */
-  protected $accessToken;
-
-  /**
-   * Twitter's access token secret.
-   *
-   * @var string
-   */
-  protected $accessTokenSecret;
-
-  /**
-   * Twitter's OAuth client.
-   *
-   * @var \Abraham\TwitterOAuth\TwitterOAuth
-   */
-  protected $twitter;
+  protected string $userId;
 
   /**
    * TwitterPostCollector constructor.
    *
-   * @param string $consumerKey
-   *   Twitter's consumer key.
-   * @param string $consumerSecret
-   *   Twitter's consumer secret.
-   * @param string $accessToken
-   *   Twitter's access token.
-   * @param string $accessTokenSecret
-   *   Twitter's access token secret.
-   * @param \Abraham\TwitterOAuth\TwitterOAuth|null $twitter
-   *   Twitter's OAuth Client.
+   * @param \GuzzleHttp\ClientInterface $httpClient
+   *   The HTTP client.
+   * @param string $bearerToken
+   *   The bearer token.
+   * @param string $userId
+   *   The Twitter user ID.
    */
-  public function __construct(string $consumerKey, string $consumerSecret, string $accessToken, string $accessTokenSecret, TwitterOAuth $twitter = NULL) {
-    $this->consumerKey = $consumerKey;
-    $this->consumerSecret = $consumerSecret;
-    $this->accessToken = $accessToken;
-    $this->accessTokenSecret = $accessTokenSecret;
-    $this->twitter = $twitter;
-    $this->setTwitterClient();
-  }
-
-  /**
-   * Sets the Twitter client.
-   */
-  public function setTwitterClient() {
-    if (NULL === $this->twitter) {
-      $this->twitter = new TwitterOAuth(
-        $this->consumerKey,
-        $this->consumerSecret,
-        $this->accessToken,
-        $this->accessTokenSecret
-      );
-    }
+  public function __construct(ClientInterface $httpClient, string $bearerToken, string $userId) {
+    $this->httpClient = $httpClient;
+    $this->bearerToken = $bearerToken;
+    $this->userId = $userId;
   }
 
   /**
@@ -93,10 +59,32 @@ class TwitterPostCollector {
    *   An array of posts.
    */
   public function getPosts($count) {
-    return $this->twitter->get('statuses/user_timeline', [
-      'count' => $count,
-      'tweet_mode' => 'extended',
-    ]);
+    $endpoint_url = sprintf('https://api.twitter.com/2/users/%s/tweets', $this->userId);
+    $query_params = [
+      'max_results' => (int) $count,
+      'tweet.fields' => 'created_at,public_metrics,text',
+      'expansions' => 'author_id,attachments.media_keys',
+      'user.fields' => 'name,username,profile_image_url',
+      'media.fields' => 'preview_image_url,type,url',
+    ];
+
+    try {
+      $response = $this->httpClient->request('GET', $endpoint_url, [
+        'headers' => [
+          'Authorization' => 'Bearer ' . $this->bearerToken,
+          'Accept'        => 'application/json',
+        ],
+        'query' => $query_params,
+      ]);
+      $body = $response->getBody()->getContents();
+      $decoded_response = json_decode($body, TRUE);
+      \Drupal::logger('socialfeed')->info('Successfully fetched @count tweets for user @user_id.', ['@count' => count($decoded_response['data'] ?? []), '@user_id' => $this->userId]);
+      return $decoded_response;
+    } catch (RequestException $e) {
+      // Log the error or handle it as per application requirements.
+      \Drupal::logger('socialfeed')->error('Twitter API request failed for user @user_id: @message. Response: @response', ['@user_id' => $this->userId, '@message' => $e->getMessage(), '@response' => $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : 'N/A']);
+      return [];
+    }
   }
 
 }

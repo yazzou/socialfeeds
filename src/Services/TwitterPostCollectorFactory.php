@@ -3,6 +3,7 @@
 namespace Drupal\socialfeed\Services;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * The factory collector class for Twitter.
@@ -12,71 +13,60 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 class TwitterPostCollectorFactory {
 
   /**
-   * The default consumer key.
+   * The config factory.
    *
-   * @var string
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $defaultConsumerKey;
+  protected $configFactory;
 
   /**
-   * The default consumer secret.
+   * The HTTP client.
    *
-   * @var string
+   * @var \GuzzleHttp\ClientInterface
    */
-  protected $defaultConsumerSecret;
+  protected $httpClient;
 
   /**
-   * The default access token.
+   * The bearer token.
    *
    * @var string
    */
-  protected $defaultAccessToken;
+  protected $bearerToken;
 
   /**
-   * The default access token secret.
+   * The Twitter user ID.
    *
    * @var string
    */
-  protected $defaultAccessTokenSecret;
+  protected $userId;
 
   /**
    * TwitterPostCollectorFactory constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
+   * @param \GuzzleHttp\ClientInterface $httpClient
+   *   The HTTP client.
    */
-  public function __construct(ConfigFactoryInterface $configFactory) {
-    $config = $configFactory->get('socialfeed.twitter.settings');
-    $this->defaultConsumerKey = $config->get('consumer_key');
-    $this->defaultConsumerSecret = $config->get('consumer_secret');
-    $this->defaultAccessToken = $config->get('access_token');
-    $this->defaultAccessTokenSecret = $config->get('access_token_secret');
+  public function __construct(ConfigFactoryInterface $configFactory, ClientInterface $httpClient) {
+    $this->configFactory = $configFactory;
+    $this->httpClient = $httpClient;
+    $config = $this->configFactory->get('socialfeed.twitter.settings');
+    $this->bearerToken = $config->get('bearer_token');
+    $this->userId = $config->get('user_id');
   }
 
   /**
    * Creates a pre-configured instance.
    *
-   * @param string $consumerKey
-   *   The consumer key.
-   * @param string $consumerSecret
-   *   The consumer secret.
-   * @param string $accessToken
-   *   The access token.
-   * @param string $accessTokenSecret
-   *   The access token secret.
-   *
    * @return \Drupal\socialfeed\Services\TwitterPostCollector
    *   A fully configured instance from TwitterPostCollector.
-   *
-   * @throws \Exception
-   *   If the instance cannot be created, such as if the ID is invalid.
    */
-  public function createInstance(string $consumerKey, string $consumerSecret, string $accessToken, string $accessTokenSecret) {
+  public function createInstance() {
     return new TwitterPostCollector(
-      $consumerKey ?: $this->defaultConsumerKey,
-      $consumerSecret ?: $this->defaultConsumerSecret,
-      $accessToken ?: $this->defaultAccessToken,
-      $accessTokenSecret ?: $this->defaultAccessTokenSecret
+      $this->httpClient,
+      $this->bearerToken,
+      $this->userId
     );
   }
 
