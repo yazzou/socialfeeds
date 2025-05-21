@@ -52,39 +52,48 @@ socialfeed.twitter.settings:
   type: config_object
   label: Twitter settings
   mapping:
+    bearer_token:
+      type: string
+      label: 'Twitter Bearer Token'
+    user_id: # New field
+      type: string
+      label: 'Twitter User ID for API v2'
     consumer_key:
       type: string
-      label: Twitter consumer Key
+      label: 'Twitter consumer Key'
     consumer_secret:
       type: string
-      label: Twitter Consumer Secret
+      label: 'Twitter Consumer Secret'
     access_token:
       type: string
-      label: Twitter Access Token
+      label: 'Twitter Access Token'
     access_token_secret:
       type: string
-      label: Twitter Access Token Secret
+      label: 'Twitter Access Token Secret'
     tweets_count:
       type: integer
-      label: Tweets count
+      label: 'Tweets count'
+    cache_duration: # New field
+      type: integer
+      label: 'Cache duration in minutes'
     hashtag:
       type: boolean
-      label: Show hashtag
+      label: 'Show hashtag'
     time_stamp:
       type: boolean
-      label: Show date/time
+      label: 'Show date/time'
     time_format:
       type: string
-      label: Date/time format
+      label: 'Date/time format'
     time_ago:
       type: boolean
-      label: Show date twitter style
+      label: 'Show date twitter style'
     trim_length:
       type: integer
-      label: Trim length
+      label: 'Trim length'
     teaser_text:
       type: string
-      label: Teaser text
+      label: 'Teaser text'
 
 socialfeed.instagram.settings:
   type: config_object

@@ -1,11 +1,22 @@
+# Default settings for Social Feed Twitter integration
+# API v2 settings (preferred)
+bearer_token: ''
+user_id: '' # Required if bearer_token is provided (e.g., '123456789')
+
+# API v1.1 legacy settings (fallback if bearer_token is not provided)
 consumer_key: ''
 consumer_secret: ''
 access_token: ''
 access_token_secret: ''
-tweets_count: 3
+
+# Common settings
+tweets_count: 5 # Default to 5, as API v2 user timeline endpoint has a minimum of 5.
+cache_duration: 15 # Default cache duration in minutes
+
+# Display settings
 hashtag: true
 time_stamp: true
-time_format: d-M-Y
+time_format: 'd-M-Y H:i' # Example format, can be changed by user
 time_ago: true
-trim_length: 280
-teaser_text: 'Read More'
+trim_length: 280 # Max length of tweet text, 0 for no trimming
+teaser_text: 'Read More' # Text to append if tweet is trimmed

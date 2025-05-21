@@ -4,7 +4,7 @@ services:
     arguments: ['@config.factory']
   socialfeed.twitter:
     class: Drupal\socialfeed\Services\TwitterPostCollectorFactory
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@http_client', '@cache.default', '@logger.channel.socialfeed']
   socialfeed.instagram:
     class: Drupal\socialfeed\Services\InstagramPostCollectorFactory
     arguments: ['@config.factory']
